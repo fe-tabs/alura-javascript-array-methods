@@ -1,12 +1,14 @@
 const booksAPI = 'https://guilhermeonrails.github.io/casadocodigo/livros.json';
 const booksSection = document.getElementById('livros');
 const buttons = document.querySelectorAll('button');
-
+const orderBooksBtn = document.getElementById('btnOrdenarPorPreco');
 let books = [];
 
 buttons.forEach(btn => btn.addEventListener('click',
   filterBooks
 ));
+
+orderBooksBtn.addEventListener('click', orderBooks);
 
 async function getBooks() {
   const res = await fetch(booksAPI);
@@ -63,6 +65,11 @@ function filterBooks() {
   });
   booksSection.innerHTML = '';
   showBooks(filteredBooks);
+}
+
+function orderBooks() {
+  let orderedBooks = books.sort((a, b) => a.preco - b.preco);
+  showBooks(orderedBooks);
 }
 
 getBooks();
