@@ -1,13 +1,18 @@
 const booksAPI = 'https://guilhermeonrails.github.io/casadocodigo/livros.json';
 const booksSection = document.getElementById('livros');
+const buttons = document.querySelectorAll('button');
 
 let books = [];
+
+buttons.forEach(btn => btn.addEventListener('click',
+  filterBooks
+));
 
 async function getBooks() {
   const res = await fetch(booksAPI);
   books = await res.json();
-  showBooks(books);
-  console.table(books);
+  booksWithDiscount = applyDiscount(books);
+  showBooks(booksWithDiscount);
 }
 
 function showBooks(books) {
@@ -37,6 +42,27 @@ function showBooks(books) {
       </div>
     `;
   })
+}
+
+function applyDiscount(books) {
+  const discount = 0.3;
+  booksWithDiscount = books.map(book => {
+    return {
+      ...book,
+      preco: book.preco * (1 - discount)
+    }
+  })
+  return booksWithDiscount;
+}
+
+function filterBooks() {
+  const btn = document.getElementById(this.id);
+  const category = btn.value; 
+  let filteredBooks = books.filter(book => {
+    return book.categoria == category;
+  });
+  booksSection.innerHTML = '';
+  showBooks(filteredBooks);
 }
 
 getBooks();
